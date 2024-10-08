@@ -1,0 +1,44 @@
+#include <stdio.h>
+void countsort(int a[], int n, int pos){
+   int output[n + 1];
+   int max = (a[0] / pos) % 10;
+   for (int i = 1; i < n; i++) {
+      if (((a[i] / pos) % 10) > max)
+         max = a[i];
+   }
+   int count[max + 1];
+   for (int i = 0; i < max; ++i)
+      count[i] = 0;
+   for (int i = 0; i < n; i++)
+      count[(a[i] / pos) % 10]++;
+   for (int i = 1; i < 10; i++)
+      count[i] += count[i - 1];
+   for (int i = n - 1; i >= 0; i--) {
+      output[count[(a[i] / pos) % 10] - 1] = a[i];
+      count[(a[i] / pos) % 10]--;
+   }
+   for (int i = 0; i < n; i++)
+      a[i] = output[i];
+}
+void radixsort(int a[], int n){
+   int max = a[0];
+   for (int i = 1; i < n; i++)
+      if (a[i] > max)
+         max = a[i];
+   for (int pos = 1; max / pos > 0; pos *= 10)
+      countsort(a, n, pos);
+}
+int main(){
+   int a[] = {236, 15, 333, 27, 9, 108, 76, 498};
+   int n = sizeof(a) / sizeof(a[0]);
+   printf("Before sorting array elements are: ");
+   for (int i = 0; i <n; ++i) {
+      printf("%d ", a[i]);
+   }
+   radixsort(a, n);
+   printf("After sorting array elements are: ");
+   for (int i = 0; i < n; ++i) {
+      printf("%d ", a[i]);
+   }
+   printf("");
+}
